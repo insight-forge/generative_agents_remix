@@ -12,6 +12,9 @@ import time
 from utils import *
 
 openai.api_key = openai_api_key
+openai.api_version = openai_api_version
+openai.api_base = openai_base_url
+openai.api_type = openai_api_type
 
 def temp_sleep(seconds=0.1):
   time.sleep(seconds)
@@ -20,7 +23,8 @@ def ChatGPT_single_request(prompt):
   temp_sleep()
 
   completion = openai.ChatCompletion.create(
-    model="gpt-3.5-turbo", 
+    deployment_id="gpt-35-turbo-1106",
+    # model="gpt-3.5-turbo", 
     messages=[{"role": "user", "content": prompt}]
   )
   return completion["choices"][0]["message"]["content"]
@@ -69,16 +73,17 @@ def ChatGPT_request(prompt):
     a str of GPT-3's response. 
   """
   # temp_sleep()
-  try: 
-    completion = openai.ChatCompletion.create(
-    model="gpt-3.5-turbo", 
+  # try: 
+  completion = openai.ChatCompletion.create(
+    deployment_id="gpt-35-turbo-1106",
+    # model="gpt-3.5-turbo", 
     messages=[{"role": "user", "content": prompt}]
     )
-    return completion["choices"][0]["message"]["content"]
+  return completion["choices"][0]["message"]["content"]
   
-  except: 
-    print ("ChatGPT ERROR")
-    return "ChatGPT ERROR"
+  # except: 
+  #   print ("ChatGPT ERROR")
+  #   return "ChatGPT ERROR"
 
 
 def GPT4_safe_generate_response(prompt, 
@@ -263,7 +268,7 @@ def safe_generate_response(prompt,
     print (prompt)
 
   for i in range(repeat): 
-    curr_gpt_response = GPT_request(prompt, gpt_parameter)
+    curr_gpt_response = ChatGPT_request(prompt).strip()
     if func_validate(curr_gpt_response, prompt=prompt): 
       return func_clean_up(curr_gpt_response, prompt=prompt)
     if verbose: 
@@ -278,7 +283,7 @@ def get_embedding(text, model="text-embedding-ada-002"):
   if not text: 
     text = "this is blank"
   return openai.Embedding.create(
-          input=[text], model=model)['data'][0]['embedding']
+          input=[text], deployment_id=model)['data'][0]['embedding']
 
 
 if __name__ == '__main__':
