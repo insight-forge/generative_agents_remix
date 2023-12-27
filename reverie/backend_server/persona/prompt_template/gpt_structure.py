@@ -26,7 +26,7 @@ def ChatGPT_single_request(prompt):
   temp_sleep()
 
   completion = openai.ChatCompletion.create(
-    deployment_id=deployment_id,
+    deployment_id="gpt-35-turbo-1106",
     # model="gpt-3.5-turbo", 
     messages=[{"role": "user", "content": prompt}]
   )
@@ -78,7 +78,7 @@ def ChatGPT_request(prompt):
   # temp_sleep()
   # try: 
   completion = openai.ChatCompletion.create(
-    deployment_id=deployment_id,
+    deployment_id="gpt-35-turbo-1106",
     # model="gpt-3.5-turbo", 
     messages=[{"role": "user", "content": prompt}]
     )
