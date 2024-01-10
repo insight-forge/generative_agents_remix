@@ -7,17 +7,25 @@ Description: Wrapper functions for calling OpenAI APIs.
 import json
 import random
 import openai
+from openai import OpenAI
 import time 
 import sys
+from sentence_transformers import SentenceTransformer
 
 sys.path.append('../../')
 
 from utils import *
 
-openai.api_key = openai_api_key
-openai.api_version = openai_api_version
-openai.api_base = openai_base_url
-openai.api_type = openai_api_type
+api_key = openai_api_key
+base_url = openai_base_url
+model = openai_model
+emb_model_path = emb_path
+
+client = OpenAI(
+    api_key = api_key,
+    base_url = base_url
+)
+emb_model = SentenceTransformer(emb_model_path)
 
 def temp_sleep(seconds=0.1):
   time.sleep(seconds)
@@ -25,12 +33,12 @@ def temp_sleep(seconds=0.1):
 def ChatGPT_single_request(prompt): 
   temp_sleep()
 
-  completion = openai.ChatCompletion.create(
-    deployment_id="gpt-35-turbo-1106",
-    # model="gpt-3.5-turbo", 
-    messages=[{"role": "user", "content": prompt}]
-  )
-  return completion["choices"][0]["message"]["content"]
+  completion = client.chat.completions.create(
+    messages=[{'role': 'user', 'content': prompt}],
+    #temperature=0.7,
+    model=model
+)
+  return completion.choices[0].message.content
 
 
 # ============================================================================
@@ -77,12 +85,12 @@ def ChatGPT_request(prompt):
   """
   # temp_sleep()
   # try: 
-  completion = openai.ChatCompletion.create(
-    deployment_id="gpt-35-turbo-1106",
-    # model="gpt-3.5-turbo", 
-    messages=[{"role": "user", "content": prompt}]
-    )
-  return completion["choices"][0]["message"]["content"]
+  completion = client.chat.completions.create(
+    messages=[{'role': 'user', 'content': prompt}],
+    # temperature=0.7,
+    model=model
+  )
+  return completion.choices[0].message.content
   
   # except: 
   #   print ("ChatGPT ERROR")
@@ -281,12 +289,11 @@ def safe_generate_response(prompt,
   return fail_safe_response
 
 
-def get_embedding(text, model="text-embedding-ada-002"):
+def get_embedding(text):
   text = text.replace("\n", " ")
   if not text: 
     text = "this is blank"
-  return openai.Embedding.create(
-          input=[text], deployment_id=model)['data'][0]['embedding']
+  return emb_model.encode([text])[0]
 
 
 if __name__ == '__main__':
