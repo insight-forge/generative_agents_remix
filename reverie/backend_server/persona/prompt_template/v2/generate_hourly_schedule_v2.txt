@@ -13,6 +13,7 @@ Hourly schedule format:
 !<INPUT 0>!
 ===
 !<INPUT 1>!
+Require simplicity, use one sentence for each hour's schedule without punctuation:
 !<INPUT 2>!
 !<INPUT 3>!!<INPUT 4>!
 !<INPUT 5>!
