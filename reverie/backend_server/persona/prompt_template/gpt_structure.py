@@ -149,6 +149,7 @@ def ChatGPT_safe_generate_response(prompt,
                                    fail_safe_response="error",
                                    func_validate=None,
                                    func_clean_up=None,
+                                   gpt_param=None,
                                    verbose=False):
   # prompt = 'GPT-3 Prompt:\n"""\n' + prompt + '\n"""\n'
   prompt = '"""\n' + prompt + '\n"""\n'
@@ -163,7 +164,7 @@ def ChatGPT_safe_generate_response(prompt,
   for i in range(repeat):
 
     try:
-      curr_gpt_response = ChatGPT_request(prompt).strip()
+      curr_gpt_response = ChatGPT_request(prompt, gpt_param).strip()
       print('***********************\n' + curr_gpt_response + "\n------------------------")
       end_index = curr_gpt_response.rfind('}') + 1
       curr_gpt_response = curr_gpt_response[:end_index]

@@ -431,8 +431,8 @@ def run_gpt_prompt_task_decomp(persona,
     try:
       __func_clean_up(gpt_response)
     except:
-      # pass
-      return False
+      pass
+      #return False
     return gpt_response
 
   def get_fail_safe():
